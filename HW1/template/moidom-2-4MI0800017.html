@@ -101,11 +101,32 @@
 		t1.add(slice1);
 		t1.add(slice2);
 
-		geometry = new THREE.SphereGeometry(.3, 32, 16);
+
+		var lever = new THREE.Group();
+
+		geometry = new THREE.SphereGeometry(.1, 32, 16);
 		material = new THREE.MeshPhongMaterial({ color: 'red' });
-		var lever = new THREE.Mesh(geometry, material);
-		lever.position.set(0, 2, 1.5);
+		var ball = new THREE.Mesh(geometry, material);
+
+		geometry = new THREE.CylinderGeometry(.03, .03, .5, 32, 20);
+		material = new THREE.MeshPhongMaterial({ color: 'red' });
+		var long = new THREE.Mesh(geometry, material);
+		long.rotation.x = Math.PI / 2 - Math.atan(.45 / 2);
+		long.position.set(0, -.05, -.25);
+
+		lever.add(long);
+		lever.add(ball);
+
+		lever.position.set(0, 2, 1.7);
+
 		t1.add(lever);
+
+		geometry = new THREE.BoxGeometry(.2, 1.75, .2);
+		material = new THREE.MeshPhongMaterial({ color: 'black' });
+		part = new THREE.Mesh(geometry, material);
+		part.position.set(0, 1.42, 1.675);
+		part.rotation.x = -Math.atan(.45 / 2);
+		t1.add(part);
 
 		toasters.push(t1);
 		scene.add(t1);
@@ -124,8 +145,8 @@
 			for (var i = 0; i < toasters.length; ++i) {
 				toasters[i].children[2].position.y = 2.4 - .7 * Math.sin(alpha) * Math.sin(alpha) - .4 * Math.cos(alpha);
 				toasters[i].children[3].position.y = 2.4 - .9 * Math.sin(alpha + .3) * Math.sin(alpha + .3) - .9 * Math.cos(alpha);
-				toasters[i].children[4].position.y = .8 * Math.sin(alpha + .1) + 1.2;
-				toasters[i].children[4].position.z = 1.6 - .18 * Math.sin(alpha + .1);
+				toasters[i].children[4].position.y = .8 * Math.sin(alpha + .1) + 1.5;
+				toasters[i].children[4].position.z = 2 - .18 * Math.sin(alpha + .1);
 			}
 
 			alpha += 0.1;
