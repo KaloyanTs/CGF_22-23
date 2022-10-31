@@ -161,7 +161,7 @@
 		t1.add(csgBody.toMesh());
 
 
-		t1.position.set(0, 0, 1);
+		t1.position.set(7, 0, -2);
 		toasters.push(t1);
 		scene.add(t1);
 
@@ -171,8 +171,35 @@
 		toasters.push(t2);
 		scene.add(t2);
 
+
+		geometry = new THREE.CylinderGeometry(.1, .1, 1.2, 16, 8);
+		material = new THREE.MeshPhongMaterial({ color: 'orange' });
+		var leftLeg = new THREE.Mesh(geometry, material);
+		leftLeg.position.y = -.6;
+		leftLeg.position.x = .2;
+		leftLeg.rotation.z = Math.PI / 20;
+		var rightLeg = new THREE.Mesh(geometry, material);
+		rightLeg.position.y = -.6;
+		rightLeg.position.x = -.2;
+		rightLeg.rotation.z = -Math.PI / 20;
+		var body = new THREE.Mesh(geometry, material);
+		body.position.y = .6;
+
+		geometry = new THREE.SphereGeometry(.5, 32, 16);
+		var head = new THREE.Mesh(geometry, material);
+		head.position.y = 1.7;
+
+		var person = new THREE.Group();
+		person.add(leftLeg);
+		person.add(rightLeg);
+		person.add(body);
+		person.add(head);
+
+		scene.add(person);
+
 		var alpha = Math.PI / 4;
 		var slice1Bounce = .7;
+		var personAlpha = 0;
 		function drawFrame() {
 			requestAnimationFrame(drawFrame);
 
@@ -183,6 +210,10 @@
 				toasters[i].children[4].position.z = 2 - .18 * Math.sin(alpha + .1);
 			}
 
+			person.position.set(10 * Math.cos(personAlpha) + 1, .6, 9 * Math.sin(personAlpha));
+			person.rotation.y = -personAlpha;
+
+			personAlpha += 0.02;
 			alpha += 0.1;
 			renderer.render(scene, camera);
 		};
