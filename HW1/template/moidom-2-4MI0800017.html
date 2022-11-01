@@ -225,10 +225,16 @@
 		leftLeg.position.y = -.6;
 		leftLeg.position.x = .2;
 		leftLeg.rotation.z = Math.PI / 20;
+		var g = new THREE.Group();
+		g.add(leftLeg);
+		leftLeg = g;
 		var rightLeg = new THREE.Mesh(geometry, material);
 		rightLeg.position.y = -.6;
 		rightLeg.position.x = -.2;
 		rightLeg.rotation.z = -Math.PI / 20;
+		g = new THREE.Group();
+		g.add(rightLeg);
+		rightLeg = g;
 		var body = new THREE.Mesh(geometry, material);
 		body.position.y = .6;
 
@@ -250,6 +256,8 @@
 		var personX, personZ;
 		var doorAlpha = 0;
 		var doorStep = 0.02;
+		var curvature = .7;
+		var legAlpha = 0.04;
 		function drawFrame() {
 			requestAnimationFrame(drawFrame);
 
@@ -267,14 +275,18 @@
 					doorStep = -doorStep;
 			}
 
-			personX = 9 * Math.sqrt(Math.abs(Math.cos(personAlpha)));
+			personX = 9 * Math.pow(Math.abs(Math.cos(personAlpha)), curvature);
 			if (Math.cos(personAlpha) < 0) personX = -personX;
-			personZ = 9 * Math.sqrt(Math.abs(Math.sin(personAlpha)));
+			personZ = 9 * Math.pow(Math.abs(Math.sin(personAlpha)), curvature);
 			if (Math.sin(personAlpha) < 0) personZ = -personZ;
 			person.position.set(1 + personX,
 				.6,
 				personZ);
 			person.rotation.y = -personAlpha;
+			leftLeg.rotation.x += legAlpha;
+			if (leftLeg.rotation.x > Math.PI / 4 || leftLeg.rotation.x < -Math.PI / 4)
+				legAlpha = -legAlpha;
+			rightLeg.rotation.x = -leftLeg.rotation.x;
 
 			personAlpha += 0.02;//fix
 			alpha += 0.1;
