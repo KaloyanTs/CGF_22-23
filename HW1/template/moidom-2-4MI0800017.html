@@ -38,6 +38,8 @@
 
 		requestAnimationFrame(drawFrame);
 
+		var doors = [];
+
 		function wall(from, to, height, thickness, color, hasDoor, doorPosition, doorDim) {
 			var length = Math.sqrt((from[0] - to[0]) * (from[0] - to[0]) + (from[1] - to[1]) * (from[1] - to[1]));
 			var geometry = new THREE.BoxGeometry(length, height, thickness);
@@ -56,6 +58,22 @@
 
 				csgWall.subtract([w, door]);
 				w = csgWall.toMesh();
+
+				var doorG = new THREE.Group();
+				var coords = [door.position.x,
+				door.position.y,
+				door.position.z];
+				door.position.set(doorDim[0] / 2, doorDim[1] / 2, 0);
+				var doorG = new THREE.Group();
+				doorG.add(door);
+				doorG.position.set(coords[0], 0, coords[2]);
+				var v = [doorDim[0] / 2 * (from[0] - to[0]) / length,
+					0,
+				doorDim[0] / 2 * (from[1] - to[1]) / length];
+				doorG.position.x += v[0];
+				doorG.position.z += v[2];
+
+				scene.add(doorG);
 			}
 			w.castShadow = true;
 			w.receiveShadow = true;
@@ -90,7 +108,7 @@
 			3,
 			wallThickness,
 			wallColor,
-			true, [0, 1], [1.5, 2, 2]);
+			true, [0, 2], [1.5, 2, 2]);
 
 		var csgTiled = new CSG();
 		csgTiled.subtract([tilted, leftCut, rightCut]);
