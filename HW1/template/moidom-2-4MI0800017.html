@@ -38,31 +38,31 @@
 
 		requestAnimationFrame(drawFrame);
 
-		function wall(from, to, height, thickness, color) {
+		function wall(from, to, height, thickness, color, hasDoor, doorPosition, doorDim) {
 			var length = Math.sqrt((from[0] - to[0]) * (from[0] - to[0]) + (from[1] - to[1]) * (from[1] - to[1]));
 			var geometry = new THREE.BoxGeometry(length, height, thickness);
 			var material = new THREE.MeshPhongMaterial({ color: color });
 			var w = new THREE.Mesh(geometry, material);
 			w.rotation.y = Math.atan((from[1] - to[1]) / (from[0] - to[0]));
 			w.position.set((from[0] + to[0]) / 2, height / 2, -(from[1] + to[1]) / 2);
+			if (hasDoor) {
+				var door = new THREE.Mesh(
+					new THREE.BoxGeometry(doorDim[0], doorDim[1], doorDim[2]),
+					material
+				);
+				door.rotation.y = Math.atan((from[1] - to[1]) / (from[0] - to[0]));
+				door.position.set(doorPosition[0], doorDim[1] / 2, -doorPosition[1]);
+				var csgWall = new CSG();
+
+				csgWall.subtract([w, door]);
+				w = csgWall.toMesh();
+			}
 			w.castShadow = true;
 			w.receiveShadow = true;
 			return w;
 		}
 
 		var geometry, material;
-
-		//geometry = new THREE.BoxGeometry(1, 1, 1),
-		//	material = new THREE.MeshPhongMaterial({ color: 'crimson', shininess: 100 });
-
-		var cube = new THREE.Mesh(geometry, material);
-		cube.position.set(0, .5, 0);
-		cube.receiveShadow = true;
-		cube.castShadow = true;
-
-		cube.scale.z = 2;
-
-		scene.add(cube);
 
 		const wallThickness = .2;
 		const wallColor = 'salmon';
@@ -75,12 +75,32 @@
 		scene.add(wall([9, 5 - wallThickness / 2], [9, -1 - wallThickness / 2], 3, wallThickness, wallColor));
 		scene.add(wall([9 - wallThickness / 2, -1], [3 - wallThickness / 2, -1], 3, wallThickness, wallColor));
 		scene.add(wall([3, -3.5], [3, -2.5], 2, 2 * wallThickness, doorColor));
-		scene.add(wall([5, -1 + wallThickness / 2], [5, 5 - wallThickness / 2], 3, wallThickness, wallColor));
+		scene.add(wall([5, -1 + wallThickness / 2],
+			[5, 5 - wallThickness / 2],
+			3,
+			wallThickness,
+			wallColor,
+			true, [5, 1], [1.5, 2, 1]));
 		scene.add(wall([3, -1 + wallThickness / 2], [3, 1], 3, wallThickness, wallColor));
+		var rightCut = wall([3 + wallThickness, -1 + wallThickness / 2], [3 + wallThickness, 1.5], 3, wallThickness, wallColor);
 		scene.add(wall([-1, 2], [-1, 5 - wallThickness / 2], 3, wallThickness, wallColor));
-		var tiltedL = Math.sqrt(3 * wallThickness * wallThickness + 16 * wallThickness + 17);
-		scene.add(wall([-1.0735848395, 2.092452789], [3.0735843719, 0.9075455745], 3, wallThickness, wallColor));
-		scene.add(wall([3 - wallThickness / 2, -4], [-4 + wallThickness / 2, -4], 3, wallThickness, wallColor));
+		var leftCut = wall([-1 - wallThickness, 1.5], [-1 - wallThickness, 5 - wallThickness / 2], 3, wallThickness, wallColor);
+		var tilted = wall([-1.0735848395, 2.092452789],
+			[3.0735843719, 0.9075455745],
+			3,
+			wallThickness,
+			wallColor,
+			true, [0, 1], [1.5, 2, 2]);
+
+		var csgTiled = new CSG();
+		csgTiled.subtract([tilted, leftCut, rightCut]);
+		scene.add(csgTiled.toMesh());
+		scene.add(wall([3 - wallThickness / 2, -4],
+			[-4 + wallThickness / 2, -4],
+			3,
+			wallThickness,
+			wallColor,
+			true, [-2, -4], [1.5, 2, 1]));
 
 		var toasters = [];
 
