@@ -40,6 +40,43 @@
 
 		var doors = [];
 
+		function slice() {
+
+		}
+		scene.add(slice());
+
+		function handle() {
+			var geometry = new THREE.TorusGeometry(2, .4, 16, 100, Math.PI / 3);
+			var material = new THREE.MeshPhongMaterial();
+			material.side = THREE.DoubleSide;
+			var obj = new THREE.Mesh(geometry, material);
+			geometry = new THREE.SphereGeometry(.48, 16, 32, 0, 2 * Math.PI, 0, Math.PI / 3);
+			var up = new THREE.Mesh(geometry, material);
+			up.position.y = -.48 / 2;
+			var g = new THREE.Group();
+			g.add(up);
+			up = g;
+			up.position.set(2 * Math.cos(Math.PI / 3), 2 * Math.sin(Math.PI / 3), 0);
+			up.rotation.z = Math.PI / 3;
+
+			g = new THREE.Group();
+			g.add(up);
+			g.add(obj);
+			obj = g;
+			obj.rotation.z = Math.PI / 2;
+			obj.scale.set(1.5, .8, .8);
+			obj.rotation.x = Math.PI / 2;
+
+			obj.position.set(0, 0, -3);
+			g = new THREE.Group();
+			g.add(obj);
+			obj = g;
+
+			obj.scale.z = 1.5;
+			obj.scale.x = .6;
+			return obj;
+		}
+
 		function wall(from, to, height, thickness, color, hasDoor, doorPosition, doorDim) {
 			var length = Math.sqrt((from[0] - to[0]) * (from[0] - to[0]) + (from[1] - to[1]) * (from[1] - to[1]));
 			var geometry = new THREE.BoxGeometry(length, height, thickness);
@@ -50,14 +87,69 @@
 			if (hasDoor) {
 				var door = new THREE.Mesh(
 					new THREE.BoxGeometry(doorDim[0], doorDim[1], doorDim[2]),
-					material
+					new THREE.MeshPhongMaterial({ color: 0xc7d7f0 })
 				);
+
 				door.rotation.y = Math.atan((from[1] - to[1]) / (from[0] - to[0]));
 				door.position.set(doorPosition[0], doorDim[1] / 2, -doorPosition[1]);
 				var csgWall = new CSG();
 
 				csgWall.subtract([w, door]);
 				w = csgWall.toMesh();
+
+				var h = handle();
+				h.scale.set(.1, .1, .1);
+				h.position.x = 7 * doorDim[0] / 16;
+				h.position.z = doorDim[2] / 2;
+				h.rotation.y = Math.PI / 2;
+
+				var h2 = handle();
+				h2.rotation.z = Math.PI;
+				h2.scale.set(.1, .1, .1);
+				h2.position.x = 7 * doorDim[0] / 16;
+				h2.position.z = -doorDim[2] / 2;
+				h2.rotation.y = Math.PI / 2;
+
+				door.position.set(0, doorDim[1] / 2, 0);
+				door.rotation.set(0, 0, 0);
+
+				var csg = new CSG();
+				material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+				var doorHole = new THREE.Mesh(
+					new THREE.BoxGeometry(3 * doorDim[0] / 4, 5 * doorDim[1] / 6, doorDim[2]),
+					material
+				);
+				doorHole.position.y = doorDim[1] / 2;
+				csg.subtract([door, doorHole]);
+				door = csg.toMesh();
+
+				var glass = new THREE.MeshPhysicalMaterial({
+					metalness: 0.2,
+					roughness: 0.2,
+					transparent: true,
+					opacity: 0.5,
+					transmission: 0.1,
+					side: THREE.FrontSide,
+					clearcoat: 1.0,
+					clearcoatRoughness: 0.39,
+					color: 0xfab95f
+				})
+
+				var doorGlass = new THREE.Mesh(
+					new THREE.BoxGeometry(3 * doorDim[0] / 4, 5 * doorDim[1] / 6, doorDim[2] / 2),
+					glass
+				);
+
+				door.position.set(0, -doorDim[1] / 2, 0);
+				door.rotation.set(0, 0, 0);
+				var g = new THREE.Group();
+				g.add(door);
+				g.add(h);
+				g.add(h2);
+				g.add(doorGlass);
+				door = g;
+				door.rotation.y = Math.atan((from[1] - to[1]) / (from[0] - to[0]));
+				door.position.set(doorPosition[0], doorDim[1] / 2, -doorPosition[1]);
 
 				var doorG = new THREE.Group();
 				var coords = [door.position.x,
@@ -97,13 +189,14 @@
 			material = new THREE.MeshBasicMaterial({ color: 0xfaf9ed });
 			part = new THREE.Mesh(geometry, material);
 			part.position.y = -.75;
-			var bulbLight = new THREE.PointLight(0xffffff, .5);
-			// fix var bulbLight = new THREE.SpotLight(0xffffff, .5);
+			var bulbLight = new THREE.SpotLight(0xffffff, .5);
+			// fix var bulbLight = new THREE.PointLight(0xffffff, .5);
 			bulbLight.position.y = -0.1;
-			bulbLight.angle = Math.PI / 3;
+			bulbLight.angle = 3 * Math.PI / 4;
 			bulbLight.target = part;
 			bulbLight.castShadow = true;
 			bulbLight.receiveShadow = true;
+			bulbLight.intensity = .09;
 			part.add(bulbLight);
 			lightbulb.add(part);
 
@@ -162,14 +255,18 @@
 			true, [5, 1], [1.5, 2, .3]));
 		scene.add(wall([3, -1 + wallThickness / 2], [3, 1], 3, wallThickness, wallColor));
 		var rightCut = wall([3 + wallThickness, -1 + wallThickness / 2], [3 + wallThickness, 1.5], 3, wallThickness, wallColor);
-		scene.add(wall([-1, 2], [-1, 5 - wallThickness / 2], 3, wallThickness, wallColor));
+		scene.add(wall(
+			[-1, 2], [-1, 5 - wallThickness / 2],
+			3, wallThickness, wallColor
+			, true, [-1, 3.5], [1.5, 2, .3]));
 		var leftCut = wall([-1 - wallThickness, 1.5], [-1 - wallThickness, 5 - wallThickness / 2], 3, wallThickness, wallColor);
 		var tilted = wall([-1.0735848395, 2.092452789],
 			[3.0735843719, 0.9075455745],
 			3,
 			wallThickness,
-			wallColor,
-			true, [0, 2.35], [1.5, 2, 1.7]);
+			wallColor
+		);
+		// true, [0, 2.35], [1.5, 2, 1.7]);
 
 		var csgTiled = new CSG();
 		csgTiled.subtract([tilted, leftCut, rightCut]);
@@ -304,7 +401,6 @@
 			getPoint(t) {
 				var x = Math.cos(2 * Math.PI * t);
 				var y = 3 * Math.sin(2 * Math.PI * t);
-
 				return new THREE.Vector3(4 * t, 20 * ((1 - t) - 0.23) * ((1 - t) + 0.18) * ((1 - t) - 0.75), 0);
 			}
 		}
@@ -378,6 +474,9 @@
 		var curvature = .7;
 		var legAlpha = 0.04;
 		var lampAlpha = 0;
+		var initialDoorAlpha = [];
+		for (var i = 0; i < doors.length; ++i)
+			initialDoorAlpha.push(doors[i].rotation.y);
 		function drawFrame() {
 			requestAnimationFrame(drawFrame);
 
@@ -388,12 +487,12 @@
 				toasters[i].children[4].position.z = 2 - .18 * Math.sin(alpha + .1);
 			}
 
-			for (var i = 0; i < doors.length; ++i) {
-				doors[i].rotation.y += doorStep;
-				if (doors[i].rotation.y > 3 * Math.PI / 4 ||
-					doors[i].rotation.y < 0)
-					doorStep = -doorStep;
-			}
+			doorAlpha += doorStep;
+			if (doorAlpha > 9 * Math.PI / 16 ||
+				doorAlpha < 0)
+				doorStep = -doorStep;
+			for (var i = 0; i < doors.length; ++i)
+				doors[i].rotation.y = initialDoorAlpha[i] + doorAlpha;
 
 			personX = 9 * Math.pow(Math.abs(Math.cos(personAlpha)), curvature);
 			if (Math.cos(personAlpha) < 0) personX = -personX;
@@ -409,7 +508,7 @@
 			rightLeg.rotation.x = -leftLeg.rotation.x;
 
 			lampGroup.rotation.z = Math.PI / 12 * Math.sin(lampAlpha);
-			lampGroup.rotation.x = Math.PI / 20 * Math.sin(1.5*lampAlpha);
+			lampGroup.rotation.x = Math.PI / 20 * Math.sin(1.5 * lampAlpha);
 
 			personAlpha += 0.01;//fix
 			lampAlpha += 0.04;
