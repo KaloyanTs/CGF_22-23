@@ -97,9 +97,10 @@
 			material = new THREE.MeshBasicMaterial({ color: 0xfaf9ed });
 			part = new THREE.Mesh(geometry, material);
 			part.position.y = -.75;
-			var bulbLight = new THREE.SpotLight(0xffffff, .5);
+			var bulbLight = new THREE.PointLight(0xffffff, .5);
+			// fix var bulbLight = new THREE.SpotLight(0xffffff, .5);
 			bulbLight.position.y = -0.1;
-			bulbLight.angle = Math.PI / 5;
+			bulbLight.angle = Math.PI / 3;
 			bulbLight.target = part;
 			bulbLight.castShadow = true;
 			bulbLight.receiveShadow = true;
@@ -129,6 +130,7 @@
 			geometry = new THREE.SphereGeometry(2.3, 32, 16, 0,
 				2 * Math.PI, 0, 2 * Math.PI / 3);
 			material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+			material.side = THREE.DoubleSide;
 			part = new THREE.Mesh(geometry, material);
 			part.castShadow = true;
 			part.receiveShadow = true;
@@ -295,9 +297,40 @@
 		lampShade.add(lamp);
 
 		lampShade.scale.set(.5, .5, .5);
-		lampShade.position.set(0, 5, 0);
+		lampShade.position.set(0, -1.65, 0);
 
-		scene.add(lampShade);
+
+		class LampCurve extends THREE.Curve {
+			getPoint(t) {
+				var x = Math.cos(2 * Math.PI * t);
+				var y = 3 * Math.sin(2 * Math.PI * t);
+
+				return new THREE.Vector3(4 * t, 20 * ((1 - t) - 0.23) * ((1 - t) + 0.18) * ((1 - t) - 0.75), 0);
+			}
+		}
+		geometry = new THREE.TubeGeometry(new LampCurve(), 200, .3, 200);
+		material = new THREE.MeshPhongMaterial();
+		material.side = THREE.DoubleSide;
+		surface = new THREE.Mesh(geometry, material);
+		surface.position.y = -1.2;
+		surface.rotation.y = 2 * Math.PI / 3;
+
+		lampShade.add(surface);
+		surface = surface.clone();
+		surface.rotation.y = - Math.PI / 3;
+		lampShade.add(surface);
+
+		surface = surface.clone();
+		surface.rotation.y = Math.PI;
+		lampShade.add(surface);
+
+		var lampGroup = new THREE.Group();
+		lampGroup.add(lampShade);
+
+		lampGroup.scale.set(.4, .4, .4);
+		lampGroup.position.set(0, 3, 0);
+
+		scene.add(lampGroup);
 
 		geometry = new THREE.CylinderGeometry(.1, .1, 1.2, 16, 8);
 		material = new THREE.MeshPhongMaterial({ color: 'orange' });
@@ -344,6 +377,7 @@
 		var doorStep = 0.02;
 		var curvature = .7;
 		var legAlpha = 0.04;
+		var lampAlpha = 0;
 		function drawFrame() {
 			requestAnimationFrame(drawFrame);
 
@@ -374,7 +408,11 @@
 				legAlpha = -legAlpha;
 			rightLeg.rotation.x = -leftLeg.rotation.x;
 
+			lampGroup.rotation.z = Math.PI / 12 * Math.sin(lampAlpha);
+			lampGroup.rotation.x = Math.PI / 20 * Math.sin(1.5*lampAlpha);
+
 			personAlpha += 0.01;//fix
+			lampAlpha += 0.04;
 			alpha += 0.1;
 			renderer.render(scene, camera);
 		};
