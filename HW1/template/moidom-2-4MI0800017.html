@@ -41,9 +41,31 @@
 		var doors = [];
 
 		function slice() {
+			var geometry = new THREE.CylinderGeometry(1, 1, 1, 32);
+			var material = new THREE.MeshPhongMaterial({ color: 0xeec07b });
+			var s = new THREE.Mesh(geometry, material);
+			s.position.z = -2.3;
+			s.scale.x = 3;
 
+			geometry = new THREE.BoxGeometry(4.9, 1, 4);
+			var bot = new THREE.Mesh(geometry, material);
+
+			geometry = new THREE.CylinderGeometry(.4, .4, 1, 32);
+			var part = new THREE.Mesh(geometry, material);
+			part.position.set(-2.15, 0, 1.7);
+
+			var sl = new THREE.Group();
+			sl.add(s);
+			sl.add(bot);
+			sl.add(part);
+			part = part.clone();
+			part.position.x = 2.15;
+			sl.add(part);
+			sl.rotation.x = Math.PI / 2;
+			sl.rotation.z = Math.PI / 2;
+
+			return sl;
 		}
-		scene.add(slice());
 
 		function handle() {
 			var geometry = new THREE.TorusGeometry(2, .4, 16, 100, Math.PI / 3);
@@ -306,12 +328,12 @@
 		part.position.set(0, .15, 0);
 		part.scale.z = 1.5;
 		t1.add(part);
-
-		geometry = new THREE.BoxGeometry(.3, 1, 1);
-		material = new THREE.MeshPhongMaterial({ color: 'yellow' });
-		var slice1 = new THREE.Mesh(geometry, material);
+		
+		var slice1 = slice();
+		slice1.scale.set(.2, .2, .2);
 		slice1.position.set(.3, 2.2, 0);
-		var slice2 = new THREE.Mesh(geometry, material);
+		var slice2 = slice();
+		slice2.scale.set(.2, .2, .2);
 		slice2.position.set(-.3, 2.1, 0);
 		t1.add(slice1);
 		t1.add(slice2);
