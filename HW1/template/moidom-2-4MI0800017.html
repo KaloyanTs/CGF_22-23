@@ -85,10 +85,64 @@
 			return w;
 		}
 
+		function getLamp() {
+			var lightbulb = new THREE.Group();
+
+			geometry = new THREE.SphereGeometry(1, 32, 16, 0, 2 * Math.PI, 0, Math.PI / 2);
+			material = new THREE.MeshBasicMaterial({ color: 0xfaf9de });
+			part = new THREE.Mesh(geometry, material);
+			lightbulb.add(part);
+
+			geometry = new THREE.CylinderGeometry(1, .5, 1.5, 32);
+			material = new THREE.MeshBasicMaterial({ color: 0xfaf9ed });
+			part = new THREE.Mesh(geometry, material);
+			part.position.y = -.75;
+			var bulbLight = new THREE.SpotLight(0xffffff, .5);
+			bulbLight.position.y = -0.1;
+			bulbLight.angle = Math.PI / 5;
+			bulbLight.target = part;
+			bulbLight.castShadow = true;
+			bulbLight.receiveShadow = true;
+			part.add(bulbLight);
+			lightbulb.add(part);
+
+			geometry = new THREE.TorusGeometry(.45, .1, 20, 32);
+			material = new THREE.MeshPhongMaterial({ color: 0xc0c0c0 });
+			part = new THREE.Mesh(geometry, material);
+			part.rotation.x = Math.PI / 2;
+			part.position.y = -1.55;
+			lightbulb.add(part);
+			part = part.clone();
+			part.position.y = -1.7;
+			lightbulb.add(part);
+			part = part.clone();
+			part.position.y = -1.85;
+			lightbulb.add(part);
+			part = part.clone();
+			part.position.y = -2;
+			lightbulb.add(part);
+
+
+			lightbulb.position.set(0, 0, 0);
+			lightbulb.rotation.x = Math.PI;
+
+			geometry = new THREE.SphereGeometry(2.3, 32, 16, 0,
+				2 * Math.PI, 0, 2 * Math.PI / 3);
+			material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+			part = new THREE.Mesh(geometry, material);
+			part.castShadow = true;
+			part.receiveShadow = true;
+
+			var lamp = new THREE.Group();
+			lamp.add(lightbulb);
+			lamp.add(part);
+			return lamp;
+		}
+
 		var geometry, material;
 
 		const wallThickness = .2;
-		const wallColor = 'salmon';
+		const wallColor = 0xfcb05b;
 		const doorColor = 'blue';
 
 		scene.add(wall([3, -7 - wallThickness / 2], [3, -1 - wallThickness / 2], 3, wallThickness, wallColor));
@@ -207,6 +261,8 @@
 
 
 		t1.position.set(7, 0, -2);
+		t1.castShadow = true;
+		t1.receiveShadow = true;
 		toasters.push(t1);
 		scene.add(t1);
 
@@ -218,6 +274,30 @@
 
 		t1.scale.set(.5, .5, .5);
 
+
+		var lampShade = new THREE.Group();
+		var lamp = getLamp();
+		lamp.position.set(5 * Math.cos(0), 0, -5 * Math.sin(0));
+		lamp.rotation.z = 7 * Math.PI / 10;
+		lamp.rotation.y = 0;
+		lampShade.add(lamp);
+		lamp = getLamp();
+		lamp.position.set(5 * Math.cos(2 * Math.PI / 3), 0,
+			-5 * Math.sin(2 * Math.PI / 3));
+		lamp.rotation.z = 7 * Math.PI / 10;
+		lamp.rotation.y = 2 * Math.PI / 3;
+		lampShade.add(lamp);
+		lamp = getLamp();
+		lamp.position.set(5 * Math.cos(-2 * Math.PI / 3), 0,
+			-5 * Math.sin(-2 * Math.PI / 3));
+		lamp.rotation.z = 7 * Math.PI / 10;
+		lamp.rotation.y = -2 * Math.PI / 3;
+		lampShade.add(lamp);
+
+		lampShade.scale.set(.5, .5, .5);
+		lampShade.position.set(0, 5, 0);
+
+		scene.add(lampShade);
 
 		geometry = new THREE.CylinderGeometry(.1, .1, 1.2, 16, 8);
 		material = new THREE.MeshPhongMaterial({ color: 'orange' });
@@ -238,6 +318,8 @@
 		var body = new THREE.Mesh(geometry, material);
 		body.position.y = .6;
 
+		var texture = new THREE.TextureLoader().load("C:/Users/KaloyanTs/Desktop/ww.jfif");
+		material = new THREE.MeshStandardMaterial({ map: texture });
 		geometry = new THREE.SphereGeometry(.5, 32, 16);
 		var head = new THREE.Mesh(geometry, material);
 		head.position.y = 1.7;
@@ -247,6 +329,10 @@
 		person.add(rightLeg);
 		person.add(body);
 		person.add(head);
+		person.add(new THREE.Mesh(
+			new THREE.SphereGeometry(.2),
+			material
+		));
 
 		scene.add(person);
 
