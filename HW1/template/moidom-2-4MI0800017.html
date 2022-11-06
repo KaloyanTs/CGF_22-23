@@ -537,6 +537,10 @@
 
 		scene.add(person);
 
+		t2.rotation.x = 9*Math.PI / 16;
+		t2.rotation.y = Math.PI;
+		t2.position.set(0, 1, 1.95);
+
 		var alpha = Math.PI / 4;
 		var slice1Bounce = .7;
 		var personAlpha = 0;
@@ -551,8 +555,8 @@
 			initialDoorAlpha.push(doors[i].rotation.y);
 		//todo doors moving
 		for (var i = 0; i < doors.length; ++i)
-				//doors[i].rotation.y = initialDoorAlpha[i] + doorAlpha;
-				doors[i].rotation.y = initialDoorAlpha[i] + Math.PI/4;
+			//doors[i].rotation.y = initialDoorAlpha[i] + doorAlpha;
+			doors[i].rotation.y = initialDoorAlpha[i] + Math.PI / 4;
 		function drawFrame() {
 			requestAnimationFrame(drawFrame);
 
@@ -569,7 +573,7 @@
 				doorStep = -doorStep;
 			// for (var i = 0; i < doors.length; ++i)
 			// 	doors[i].rotation.y = initialDoorAlpha[i] + doorAlpha;
-				
+
 			personX = 9 * Math.pow(Math.abs(Math.cos(personAlpha)), curvature);
 			if (Math.cos(personAlpha) < 0) personX = -personX;
 			personZ = 9 * Math.pow(Math.abs(Math.sin(personAlpha)), curvature);
