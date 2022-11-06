@@ -549,6 +549,10 @@
 		var initialDoorAlpha = [];
 		for (var i = 0; i < doors.length; ++i)
 			initialDoorAlpha.push(doors[i].rotation.y);
+		//todo doors moving
+		for (var i = 0; i < doors.length; ++i)
+				//doors[i].rotation.y = initialDoorAlpha[i] + doorAlpha;
+				doors[i].rotation.y = initialDoorAlpha[i] + Math.PI/4;
 		function drawFrame() {
 			requestAnimationFrame(drawFrame);
 
@@ -563,9 +567,9 @@
 			if (doorAlpha > 9 * Math.PI / 16 ||
 				doorAlpha < 0)
 				doorStep = -doorStep;
-			for (var i = 0; i < doors.length; ++i)
-				doors[i].rotation.y = initialDoorAlpha[i] + doorAlpha;
-
+			// for (var i = 0; i < doors.length; ++i)
+			// 	doors[i].rotation.y = initialDoorAlpha[i] + doorAlpha;
+				
 			personX = 9 * Math.pow(Math.abs(Math.cos(personAlpha)), curvature);
 			if (Math.cos(personAlpha) < 0) personX = -personX;
 			personZ = 9 * Math.pow(Math.abs(Math.sin(personAlpha)), curvature);
@@ -586,7 +590,7 @@
 
 			personAlpha += 0.01;//fix
 			lampAlpha += 0.04;
-			alpha += 0.1;
+			alpha += 0.3;
 			renderer.render(scene, camera);
 		};
 
