@@ -38,7 +38,7 @@
 
 		requestAnimationFrame(drawFrame);
 
-		var doors = [];
+		var doors = [], lamps = [];
 
 		function slice() {
 			var geometry = new THREE.CylinderGeometry(1, 1, 1, 32);
@@ -253,7 +253,99 @@
 			var lamp = new THREE.Group();
 			lamp.add(lightbulb);
 			lamp.add(part);
+
 			return lamp;
+		}
+
+		function getAbajour() {
+			var lampShade = new THREE.Group();
+			var lamp = getLamp();
+			lamp.position.set(5 * Math.cos(0), 0, -5 * Math.sin(0));
+			lamp.rotation.z = 7 * Math.PI / 10;
+			lamp.rotation.y = 0;
+			lampShade.add(lamp);
+			lamp = getLamp();
+			lamp.position.set(5 * Math.cos(2 * Math.PI / 3), 0,
+				-5 * Math.sin(2 * Math.PI / 3));
+			lamp.rotation.z = 7 * Math.PI / 10;
+			lamp.rotation.y = 2 * Math.PI / 3;
+			lampShade.add(lamp);
+			lamp = getLamp();
+			lamp.position.set(5 * Math.cos(-2 * Math.PI / 3), 0,
+				-5 * Math.sin(-2 * Math.PI / 3));
+			lamp.rotation.z = 7 * Math.PI / 10;
+			lamp.rotation.y = -2 * Math.PI / 3;
+			lampShade.add(lamp);
+
+			lampShade.scale.set(.5, .5, .5);
+			lampShade.position.set(0, -1.65, 0);
+
+
+			class LampCurve extends THREE.Curve {
+				getPoint(t) {
+					var x = Math.cos(2 * Math.PI * t);
+					var y = 3 * Math.sin(2 * Math.PI * t);
+					return new THREE.Vector3(4 * t, 20 * ((1 - t) - 0.23) * ((1 - t) + 0.18) * ((1 - t) - 0.75), 0);
+				}
+			}
+			geometry = new THREE.TubeGeometry(new LampCurve(), 200, .3, 200);
+			material = new THREE.MeshPhongMaterial();
+			material.side = THREE.DoubleSide;
+			surface = new THREE.Mesh(geometry, material);
+			surface.position.y = -1.2;
+			surface.rotation.y = 2 * Math.PI / 3;
+
+			lampShade.add(surface);
+			surface = surface.clone();
+			surface.rotation.y = - Math.PI / 3;
+			lampShade.add(surface);
+
+			surface = surface.clone();
+			surface.rotation.y = Math.PI;
+			lampShade.add(surface);
+
+			var lampGroup = new THREE.Group();
+			lampGroup.add(lampShade);
+
+			lampGroup.scale.set(.4, .4, .4);
+			lampGroup.position.set(0, -.4, 0);
+
+
+			class UpCurve extends THREE.Curve {
+				getPoint(t) {
+					return new THREE.Vector3(
+						Math.sin(12 * Math.PI * t),
+						Math.sin(16 * Math.PI * t),
+						Math.sin(-Math.PI * t + Math.PI / 2)
+					);
+				}
+			}
+			geometry = new THREE.TubeGeometry(new UpCurve(), 200, .05, 200);
+			material = new THREE.MeshPhongMaterial({ color: 'crimson' });
+			material.side = THREE.DoubleSide;
+			surface = new THREE.Mesh(geometry, material);
+			surface.rotation.x = Math.PI / 2;
+			surface.scale.set(.2, .2, .2);
+			surface.position.y = -.2;
+			scene.add(surface);
+
+			var g = new THREE.Group();
+			g.add(lampGroup);
+			g.add(surface);
+			lampGroup = g;
+
+			geometry = new THREE.SphereGeometry(.1);
+			g = new THREE.Mesh(geometry, material);
+			g.scale.y = .4;
+			lampGroup.add(g);
+			g = g.clone();
+			g.scale.set(1.5, .6, 1.5);
+			g.position.y = -.4;
+			lampGroup.add(g);
+
+			lampGroup.scale.set(.7, .7, .7);
+			lampGroup.position.set(0, 3, 0);
+			return lampGroup;
 		}
 
 		var geometry, material;
@@ -288,7 +380,6 @@
 			wallThickness,
 			wallColor
 		);
-		// true, [0, 2.35], [1.5, 2, 1.7]);
 
 		var csgTiled = new CSG();
 		csgTiled.subtract([tilted, leftCut, rightCut]);
@@ -328,7 +419,7 @@
 		part.position.set(0, .15, 0);
 		part.scale.z = 1.5;
 		t1.add(part);
-		
+
 		var slice1 = slice();
 		slice1.scale.set(.2, .2, .2);
 		slice1.position.set(.3, 2.2, 0);
@@ -395,60 +486,19 @@
 
 		t1.scale.set(.5, .5, .5);
 
-
-		var lampShade = new THREE.Group();
-		var lamp = getLamp();
-		lamp.position.set(5 * Math.cos(0), 0, -5 * Math.sin(0));
-		lamp.rotation.z = 7 * Math.PI / 10;
-		lamp.rotation.y = 0;
-		lampShade.add(lamp);
-		lamp = getLamp();
-		lamp.position.set(5 * Math.cos(2 * Math.PI / 3), 0,
-			-5 * Math.sin(2 * Math.PI / 3));
-		lamp.rotation.z = 7 * Math.PI / 10;
-		lamp.rotation.y = 2 * Math.PI / 3;
-		lampShade.add(lamp);
-		lamp = getLamp();
-		lamp.position.set(5 * Math.cos(-2 * Math.PI / 3), 0,
-			-5 * Math.sin(-2 * Math.PI / 3));
-		lamp.rotation.z = 7 * Math.PI / 10;
-		lamp.rotation.y = -2 * Math.PI / 3;
-		lampShade.add(lamp);
-
-		lampShade.scale.set(.5, .5, .5);
-		lampShade.position.set(0, -1.65, 0);
-
-
-		class LampCurve extends THREE.Curve {
-			getPoint(t) {
-				var x = Math.cos(2 * Math.PI * t);
-				var y = 3 * Math.sin(2 * Math.PI * t);
-				return new THREE.Vector3(4 * t, 20 * ((1 - t) - 0.23) * ((1 - t) + 0.18) * ((1 - t) - 0.75), 0);
-			}
-		}
-		geometry = new THREE.TubeGeometry(new LampCurve(), 200, .3, 200);
-		material = new THREE.MeshPhongMaterial();
-		material.side = THREE.DoubleSide;
-		surface = new THREE.Mesh(geometry, material);
-		surface.position.y = -1.2;
-		surface.rotation.y = 2 * Math.PI / 3;
-
-		lampShade.add(surface);
-		surface = surface.clone();
-		surface.rotation.y = - Math.PI / 3;
-		lampShade.add(surface);
-
-		surface = surface.clone();
-		surface.rotation.y = Math.PI;
-		lampShade.add(surface);
-
-		var lampGroup = new THREE.Group();
-		lampGroup.add(lampShade);
-
-		lampGroup.scale.set(.4, .4, .4);
-		lampGroup.position.set(0, 3, 0);
-
+		var lampGroup = getAbajour();
 		scene.add(lampGroup);
+		lamps.push(lampGroup);
+		lampGroup = getAbajour();
+		lampGroup.scale.set(.4, .4, .4);
+		lampGroup.position.set(-1, 3, 5);
+		scene.add(lampGroup);
+		lamps.push(lampGroup);
+		lampGroup = getAbajour();
+		lampGroup.scale.set(.4, .4, .4);
+		lampGroup.position.set(7, 3, -2.5);
+		scene.add(lampGroup);
+		lamps.push(lampGroup);
 
 		geometry = new THREE.CylinderGeometry(.1, .1, 1.2, 16, 8);
 		material = new THREE.MeshPhongMaterial({ color: 'orange' });
@@ -529,8 +579,10 @@
 				legAlpha = -legAlpha;
 			rightLeg.rotation.x = -leftLeg.rotation.x;
 
-			lampGroup.rotation.z = Math.PI / 12 * Math.sin(lampAlpha);
-			lampGroup.rotation.x = Math.PI / 20 * Math.sin(1.5 * lampAlpha);
+			for (var i = 0; i < lamps.length; ++i) {
+				lamps[i].rotation.z = Math.PI / 12 * Math.sin(lampAlpha + 5 * i);
+				lamps[i].rotation.x = Math.PI / 20 * Math.sin(1.5 * (lampAlpha + 5 * i));
+			}
 
 			personAlpha += 0.01;//fix
 			lampAlpha += 0.04;
