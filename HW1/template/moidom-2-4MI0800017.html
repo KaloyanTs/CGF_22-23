@@ -352,7 +352,8 @@
 
 		const wallThickness = .2;
 		const wallColor = 0xfcb05b;
-		const doorColor = 'blue';
+		const doorColor = 'crimson';
+		//todo front door
 
 		scene.add(wall([3, -7 - wallThickness / 2], [3, -1 - wallThickness / 2], 3, wallThickness, wallColor));
 		scene.add(wall([3 - wallThickness / 2, -7], [-4 - wallThickness / 2, -7], 3, wallThickness, wallColor));
@@ -360,7 +361,7 @@
 		scene.add(wall([-4 + wallThickness / 2, 5], [9 + wallThickness / 2, 5], 3, wallThickness, wallColor));
 		scene.add(wall([9, 5 - wallThickness / 2], [9, -1 - wallThickness / 2], 3, wallThickness, wallColor));
 		scene.add(wall([9 - wallThickness / 2, -1], [3 - wallThickness / 2, -1], 3, wallThickness, wallColor));
-		scene.add(wall([3, -3.5], [3, -2.5], 2, 2 * wallThickness, doorColor));
+		scene.add(wall([3, -3.5], [3, -2.5], 2, 2 * wallThickness,doorColor));
 		scene.add(wall([5, -1 + wallThickness / 2],
 			[5, 5 - wallThickness / 2],
 			3,
