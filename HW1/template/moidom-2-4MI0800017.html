@@ -40,6 +40,18 @@
 
 		var doors = [], lamps = [];
 
+		var glass = new THREE.MeshPhysicalMaterial({
+			metalness: 0.2,
+			roughness: 0.2,
+			transparent: true,
+			opacity: 0.5,
+			transmission: 0.1,
+			side: THREE.FrontSide,
+			clearcoat: 1.0,
+			clearcoatRoughness: 0.39,
+			color: 0xfab95f
+		});
+
 		function slice() {
 			var geometry = new THREE.CylinderGeometry(1, 1, 1, 32);
 			var material = new THREE.MeshPhongMaterial({ color: 0xeec07b });
@@ -145,18 +157,6 @@
 				csg.subtract([door, doorHole]);
 				door = csg.toMesh();
 
-				var glass = new THREE.MeshPhysicalMaterial({
-					metalness: 0.2,
-					roughness: 0.2,
-					transparent: true,
-					opacity: 0.5,
-					transmission: 0.1,
-					side: THREE.FrontSide,
-					clearcoat: 1.0,
-					clearcoatRoughness: 0.39,
-					color: 0xfab95f
-				})
-
 				var doorGlass = new THREE.Mesh(
 					new THREE.BoxGeometry(3 * doorDim[0] / 4, 5 * doorDim[1] / 6, doorDim[2] / 2),
 					glass
@@ -212,7 +212,6 @@
 			part = new THREE.Mesh(geometry, material);
 			part.position.y = -.75;
 			var bulbLight = new THREE.SpotLight(0xffffff, .5);
-			// fix var bulbLight = new THREE.PointLight(0xffffff, .5);
 			bulbLight.position.y = -0.1;
 			bulbLight.angle = 3 * Math.PI / 4;
 			bulbLight.target = part;
@@ -353,15 +352,85 @@
 		const wallThickness = .2;
 		const wallColor = 0xfcb05b;
 		const doorColor = 'crimson';
-		//todo front door
 
-		scene.add(wall([3, -7 - wallThickness / 2], [3, -1 - wallThickness / 2], 3, wallThickness, wallColor));
-		scene.add(wall([3 - wallThickness / 2, -7], [-4 - wallThickness / 2, -7], 3, wallThickness, wallColor));
-		scene.add(wall([-4, -7 + wallThickness / 2], [-4, 5 + wallThickness / 2], 3, wallThickness, wallColor));
-		scene.add(wall([-4 + wallThickness / 2, 5], [9 + wallThickness / 2, 5], 3, wallThickness, wallColor));
+		var frontWall = wall([3, -7 - wallThickness / 2], [3, -1 - wallThickness / 2], 3, wallThickness, wallColor, false);
+		geometry = new THREE.BoxGeometry(31 * wallThickness / 30, 2, 1.5);
+		material = new THREE.MeshPhongMaterial({ color: doorColor });
+		var frDoor = new THREE.Mesh(geometry, material);
+		scene.add(frDoor);
+		frDoor.position.set(3, 1, 2.75);
+		var ccsg = new CSG();
+		ccsg.subtract([frontWall, frDoor]);
+		frontWall = ccsg.toMesh();
+		scene.add(frontWall);
+
+		var windowWall1 = wall([3 - wallThickness / 2, -7], [-4 - wallThickness / 2, -7], 3, wallThickness, wallColor);
+
+		geometry = new THREE.CylinderGeometry(1, 1, wallThickness, 32);
+
+		var glass2 = new THREE.MeshPhysicalMaterial({
+			metalness: 0.2,
+			roughness: 0.2,
+			transparent: true,
+			opacity: 0.5,
+			transmission: 0.1,
+			side: THREE.FrontSide,
+			clearcoat: 1.0,
+			clearcoatRoughness: 0.39,
+			color: 0xf00000
+		});
+		var windoww = new THREE.Mesh(geometry, glass2);
+		windoww.castShadow = true;
+		windoww.receiveShadow = true;
+		windoww.rotation.x = Math.PI / 2;
+		windoww.position.set(1, 1.5, 7);
+		scene.add(windoww);
+
+		var windowww = windoww.clone();
+		windowww.position.set(-2, 1.5, 7);
+		scene.add(windowww);
+
+		var ccc = new CSG();
+		ccc.subtract([windowWall1, windoww, windowww]);
+
+		scene.add(ccc.toMesh());
+
+		var windowWall2 = wall([-4, -7 + wallThickness / 2], [-4, 5 + wallThickness / 2], 3, wallThickness, wallColor);
+
+		geometry = new THREE.CylinderGeometry(.6, .6, wallThickness, 32);
+
+		windoww = new THREE.Mesh(geometry, glass2);
+		windoww.castShadow = true;
+		windoww.receiveShadow = true;
+		windoww.rotation.x = Math.PI / 2;
+		windoww.rotation.z = Math.PI / 2;
+		windoww.scale.x = 1.5;
+		windoww.position.set(-4, 2, 2);
+		scene.add(windoww);
+
+		ccc = new CSG();
+		ccc.subtract([windowWall2, windoww]);
+
+		scene.add(ccc.toMesh());
+
+		var windowWall3 = wall([-4 + wallThickness / 2, 5], [9 + wallThickness / 2, 5], 3, wallThickness, wallColor);
+
+		geometry = new THREE.CylinderGeometry(1, 1, wallThickness, 32);
+
+		windoww = new THREE.Mesh(geometry, glass2);
+		windoww.castShadow = true;
+		windoww.receiveShadow = true;
+		windoww.rotation.x = Math.PI / 2;
+		windoww.position.set(2, 1.5, -5);
+		scene.add(windoww);
+
+		ccc = new CSG();
+		ccc.subtract([windowWall3, windoww]);
+
+		scene.add(ccc.toMesh());
+
 		scene.add(wall([9, 5 - wallThickness / 2], [9, -1 - wallThickness / 2], 3, wallThickness, wallColor));
 		scene.add(wall([9 - wallThickness / 2, -1], [3 - wallThickness / 2, -1], 3, wallThickness, wallColor));
-		scene.add(wall([3, -3.5], [3, -2.5], 2, 2 * wallThickness,doorColor));
 		scene.add(wall([5, -1 + wallThickness / 2],
 			[5, 5 - wallThickness / 2],
 			3,
@@ -487,6 +556,9 @@
 
 		t1.scale.set(.5, .5, .5);
 
+		frDoor.castShadow = true;
+		frDoor.receiveShadow = true;
+
 		var lampGroup = getAbajour();
 		scene.add(lampGroup);
 		lamps.push(lampGroup);
@@ -501,60 +573,65 @@
 		scene.add(lampGroup);
 		lamps.push(lampGroup);
 
-		geometry = new THREE.CylinderGeometry(.1, .1, 1.2, 16, 8);
-		material = new THREE.MeshPhongMaterial({ color: 'orange' });
-		var leftLeg = new THREE.Mesh(geometry, material);
-		leftLeg.position.y = -.6;
-		leftLeg.position.x = .2;
-		leftLeg.rotation.z = Math.PI / 20;
-		var g = new THREE.Group();
-		g.add(leftLeg);
-		leftLeg = g;
-		var rightLeg = new THREE.Mesh(geometry, material);
-		rightLeg.position.y = -.6;
-		rightLeg.position.x = -.2;
-		rightLeg.rotation.z = -Math.PI / 20;
-		g = new THREE.Group();
-		g.add(rightLeg);
-		rightLeg = g;
-		var body = new THREE.Mesh(geometry, material);
-		body.position.y = .6;
-
-		var texture = new THREE.TextureLoader().load("C:/Users/KaloyanTs/Desktop/ww.jfif");
-		material = new THREE.MeshStandardMaterial({ map: texture });
-		geometry = new THREE.SphereGeometry(.5, 32, 16);
-		var head = new THREE.Mesh(geometry, material);
-		head.position.y = 1.7;
-
-		var person = new THREE.Group();
-		person.add(leftLeg);
-		person.add(rightLeg);
-		person.add(body);
-		person.add(head);
-		person.add(new THREE.Mesh(
-			new THREE.SphereGeometry(.2),
-			material
-		));
-
-		scene.add(person);
-
-		t2.rotation.x = 9*Math.PI / 16;
+		t2.rotation.x = 9 * Math.PI / 16;
 		t2.rotation.y = Math.PI;
 		t2.position.set(0, 1, 1.95);
 
+		geometry = new THREE.BoxGeometry(1, .3, 5);
+		material = new THREE.MeshPhongMaterial({ color: 'silver' });
+		var plot = new THREE.Mesh(geometry, material);
+		plot.position.set(-4 + 1 / 2, 1, 0);
+		scene.add(plot);
+		var t3 = t1.clone();
+		scene.add(t3);
+		toasters.push(t3);
+		t3.scale.set(.2, .2, .2);
+		t3.rotation.y = Math.PI / 2;
+		t3.position.set(-4 + .51, 1 + .3 / 2, 0);
+
+		geometry = new THREE.CylinderGeometry(1, .5, .4, 32, 1, true);
+		material = new THREE.MeshPhongMaterial({ color: 'purple', side: THREE.DoubleSide });
+		var part = new THREE.Mesh(geometry, material);
+		part.position.set(0, .2, 0);
+		var part2 = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, .1, 32), material);
+
+		var gr = new THREE.Group();
+		gr.add(part);
+		gr.add(part2);
+		part = gr;
+
+		part.castShadow = true;
+		part.receiveShadow = true;
+		scene.add(part);
+		part.position.set(-4 + .55, 1 + .3 / 2, 1);
+		part.scale.set(.4, .4, .4);
+
+		var sliceGr = new THREE.Group();
+		var s = slice();
+		s.rotation.y = 0;
+		for (var i = 0; i < 10; ++i) {
+			sliceGr.add(s);
+			s = s.clone();
+			s.position.x += 1;
+			s.rotation.x = Math.random() * Math.PI;
+		}
+		scene.add(sliceGr);
+		sliceGr.rotation.z = Math.PI / 2;
+		sliceGr.scale.set(.05, .05, .05);
+		sliceGr.position.set(-4 + .53, 1.2, 1)
+
 		var alpha = Math.PI / 4;
 		var slice1Bounce = .7;
-		var personAlpha = 0;
-		var personX, personZ;
 		var doorAlpha = 0;
 		var doorStep = 0.02;
 		var curvature = .7;
 		var legAlpha = 0.04;
 		var lampAlpha = 0;
 		var initialDoorAlpha = [];
+		var frDoorAlpha = 0;
 		for (var i = 0; i < doors.length; ++i)
 			initialDoorAlpha.push(doors[i].rotation.y);
-		//todo doors moving
+		// doors moving
 		for (var i = 0; i < doors.length; ++i)
 			//doors[i].rotation.y = initialDoorAlpha[i] + doorAlpha;
 			doors[i].rotation.y = initialDoorAlpha[i] + Math.PI / 4;
@@ -575,25 +652,15 @@
 			// for (var i = 0; i < doors.length; ++i)
 			// 	doors[i].rotation.y = initialDoorAlpha[i] + doorAlpha;
 
-			personX = 9 * Math.pow(Math.abs(Math.cos(personAlpha)), curvature);
-			if (Math.cos(personAlpha) < 0) personX = -personX;
-			personZ = 9 * Math.pow(Math.abs(Math.sin(personAlpha)), curvature);
-			if (Math.sin(personAlpha) < 0) personZ = -personZ;
-			person.position.set(1 + personX,
-				.6,
-				personZ);
-			person.rotation.y = -personAlpha;
-			leftLeg.rotation.x += legAlpha;
-			if (leftLeg.rotation.x > Math.PI / 4 || leftLeg.rotation.x < -Math.PI / 4)
-				legAlpha = -legAlpha;
-			rightLeg.rotation.x = -leftLeg.rotation.x;
 
 			for (var i = 0; i < lamps.length; ++i) {
 				lamps[i].rotation.z = Math.PI / 12 * Math.sin(lampAlpha + 5 * i);
 				lamps[i].rotation.x = Math.PI / 20 * Math.sin(1.5 * (lampAlpha + 5 * i));
 			}
 
-			personAlpha += 0.01;//fix
+			frDoor.position.y = Math.sin(frDoorAlpha);
+
+			frDoorAlpha += 0.1;
 			lampAlpha += 0.04;
 			alpha += 0.3;
 			renderer.render(scene, camera);
