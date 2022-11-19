@@ -45,10 +45,10 @@
 		Явно то им е ненужно, ще го затрият те задружно<br>
 		<br>
 
-		Сложете тук един куплет,<br>
+		<!-- Сложете тук един куплет,<br>
 		кажете в него де що става,<br>
 		a изборът ви на сюжет &ndash;<br>
-		без милост да ни грабва.
+		без милост да ни грабва. -->
 	</div>
 
 	<script>
@@ -88,7 +88,7 @@
 			p2.posture = Mannequin.blend(B, A, -sin(t) / 2 + 1 / 2);
 			ball.posture = Mannequin.blend(ballFly1, ballFly2, -sin(t) / 2 + 1 / 2);
 			ball.position.x = 40 * Math.sin(t / 100);
-			ball.position.y = 30 - 10 * Math.pow(Math.sin(t / 100), 2);
+			ball.position.y = 40 - 30 * Math.pow(Math.sin(t / 100), 2);
 
 			scene.rotation.y = t / 500;
 		}
