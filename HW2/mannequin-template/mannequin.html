@@ -126,7 +126,16 @@
 		car.scale.set(10, 10, 10);
 		//scene.add(car);
 
-
+		function coeffCalc(t) {
+			function poly(x) {
+				return 0.04 * Math.pow(x, 4)
+					- 0.03 * Math.pow(x, 3)
+					- 0.25 * Math.pow(x, 2)
+					- 0.19 * x
+					+ 1;
+			}
+			return poly(t - Math.PI * Math.floor(t / Math.PI));
+		}
 
 		function animate(t) {
 			// в тази функция направете движението на
@@ -136,15 +145,15 @@
 			var k1 = Math.abs(Math.sin(t / 70) * Math.sin(t / 70) * Math.cos(4 * t / 70) + 1 / 2) * 2 / 3;
 			var k2 = Math.abs(Math.sin(Math.PI / 2 + t / 70) * Math.sin(Math.PI / 2 + (Math.PI / 2 + t) / 70) * Math.cos(Math.PI / 2 + 4 * (Math.PI / 2 + t) / 70) + 1 / 2) * 2 / 3;
 			//todo fix
-			p1.posture = Mannequin.blend(A, B, k1);
-			p2.posture = Mannequin.blend(A, B, k2);
+			p1.posture = Mannequin.blend(B, A, 1-coeffCalc((t-75)/125));
+			p2.posture = Mannequin.blend(A, B, 1-coeffCalc((t+100)/125));
 			ball.posture = Mannequin.blend(ballFly1, ballFly2, -sin(t) / 2 + 1 / 2);
-			ball.position.x = 50 * Math.sin(t / 70);
-			ball.position.y = 36 - 30 * Math.pow(Math.sin(t / 70), 2);
+			ball.position.x = 55 * Math.sin(t / 60);
+			ball.position.y = 36 - 30 * Math.pow(Math.sin(t / 60), 2);
 
 			car.position.z = 100 * Math.sin(t / 50);
 
-			scene.rotation.y = Math.PI / 2 + t / 500;
+			scene.rotation.y = Math.PI + t / 500;
 		}
 
 	</script>
