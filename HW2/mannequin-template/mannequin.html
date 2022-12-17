@@ -33,6 +33,11 @@
 </head>
 
 <body>
+	<button style="position: fixed; font-size: 1.25em; width: 8em; top: 30%; left: calc(50% - 4em);"
+		onclick="start()">Да ги видим</button>
+	<audio id="music">
+		<source src="sounds/s.mp3" type="audio/mpeg">
+	</audio>
 
 	<!-- Сложете реално заглавие -->
 	<h1>Забавление с децата</h1>
@@ -52,104 +57,7 @@
 	</div>
 
 	<script>
-
-		createScene(); // инициализиране на сцената
-		Mannequin.colors = [
-			0xecbcb4,
-			'gray',
-			'blue',
-			0xecbcb4,
-			0x0d6ea3,
-			'skyblue'
-		];
-
-		var p1 = new Male(), p2 = new Female();
-		var ball = new Child();
-		var spectator = new Child();
-		spectator.torso.recolor('red');
-		ball.torso.recolor('red');
-		spectator.position.set(40, -11, 60);
-		spectator.rotation.y = Math.PI;
-		spectator.posture = { "version": 6, "data": [2.3, [0.5, -90, 0], [0, 0, -4.8], [0.4, -4.5, 5], [6, 0, 21.6], [38.8], [-6, -6, -20.8], [-6, 0, 17.4], [41.3], [6, 6, -25.2], [24.6, 47.6, 104.8], [119.1], [-15, -83.1, 0], [40.9, 10], [-48.6, -76.8, 70.3], [128.4], [15, 90, 0], [10, 10]] };
-		ball.position.y = 15;
-		ball.position.z = 15;
-		ball.rotation.y = Math.PI / 2;
-		p1.position.x = 50;
-		p1.position.y = -.5;
-		p2.position.x = -50;
-		p2.position.y = -.5;
-
-		var A = { "version": 6, "data": [0.9, [-1.9, -63.9, -1.3], [0, 0, -2], [6.7, 14.3, 4.3], [6, -13.8, 35.8], [47.8], [-6, -6, -9.5], [-6, 0, 22.1], [53.2], [6, 6, -27.6], [2.4, 18.9, 37], [36.7], [49.5, -84.1, 70], [34.3, 100], [3.6, 4.4, 26.2], [49.5], [-18.8, 57.3, 29.4], [56.1, 10]] };
-		var B = { "version": 6, "data": [-1.5, [-1.9, -63.9, -1.3], [8.8, -0.3, -2.3], [11, -28, 7.1], [6, -13.8, 23], [67.7], [-6, -6, -46.3], [-6, 0, 25.5], [67.7], [6, 6, -48.6], [40.1, -51, 70.2], [23.9], [49.5, -84.1, 70], [34.3, 100], [-5.4, -37.5, 34.9], [27.1], [-18.8, 57.3, 29.4], [56.1, 10]] };
-		//todo fix
-		var ballFly1 = { "version": 6, "data": [3.5, [-70.4, -88.3, -1], [15.6, 32.7, -14.1], [27.1, -44.9, 6.4], [-54.9, 61.1, 121], [65.5], [-6, -6, -0.6], [-6, -38.2, 26.5], [70.5], [6, 6, -0.6], [26.4, -32.3, 8.9], [16.5], [84.2, -46.6, 89.9], [72.5, 97.8], [89.9, -73.2, -135], [79.6], [-89.2, 0, 89.9], [72.9, 69.8]] };
-		var ballFly2 = { "version": 6, "data": [3.5, [111.4, -55.4, 179.6], [17.6, 38.8, -15.2], [17.8, 46.6, 6.6], [-54.9, 61.1, 118.3], [63.5], [-6, -6, 35.9], [-36.7, 32.2, 102.6], [121.2], [6, 6, 37.1], [-2, 71.9, 24.7], [16.5], [-32.1, 25.2, 49.4], [72.5, 97.8], [25.1, -33.6, 109.8], [79.6], [-89.2, 0, 89.9], [72.9, 69.8]] };
-		// тук си направете човечетата и статичните елементи по позите
-		// ...
-		// ...
-		function makeCar(color) {
-			var shape = new THREE.Shape();
-			shape.moveTo(-5.5, 0);
-			shape.lineTo(-5.92, 0.48);
-			shape.lineTo(-5.46, 1.28);
-			shape.lineTo(-4.76, 1.54);
-			shape.lineTo(-3.74, 2.22);
-			shape.lineTo(-2.76, 2.92);
-			shape.lineTo(-1.44, 3.24);
-			shape.lineTo(-.4, 3.3);
-			shape.lineTo(.84, 3.08);
-			shape.lineTo(1.46, 2.86);
-			shape.lineTo(3.08, 1.36);
-			shape.lineTo(3.88, 1.22);
-			shape.lineTo(5, 1);
-			shape.lineTo(5.48, .6);
-			shape.lineTo(5.38, .14);
-			shape.lineTo(5, 0);
-			shape.lineTo(2.62, 0);
-			shape.lineTo(2.32, 0.53);
-			shape.lineTo(1.75, 0.53);
-			shape.lineTo(1.38, 0);
-			shape.lineTo(-2.5, 0);
-			shape.lineTo(-2.9, 0.57);
-			shape.lineTo(-3.36, .61);
-			shape.lineTo(-3.73, .4);
-			shape.lineTo(-4, 0);
-			shape.lineTo(-5, 0);
-			shape.lineTo(-5.5, 0);
-
-			var extrudeSettings = { depth: 5, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.5, bevelThickness: 0.5 };
-			var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-			var res = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color: color, shininess: 140, specular: 'white' }));
-			res.position.set(2.5, -2.2, 0);
-			res.rotation.y = -Math.PI / 2;
-			var tmp = new THREE.Group();
-			tmp.add(res);
-			res = tmp;
-			res.scale.set(8, 8, 8);
-			tmp = new THREE.Group();
-			var tire = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 4, 32), new THREE.MeshPhongMaterial({ color: 'black' }));
-			tire.position.set(23, -20, 14);
-			tire.rotation.z = Math.PI / 2;
-			tmp.add(tire);
-			tire = tire.clone();
-			tire.position.set(-23, -20, 14);
-			tmp.add(tire);
-			tire = tire.clone();
-			tire.position.set(-23, -20, -27);
-			tmp.add(tire);
-			tire = tire.clone();
-			tire.position.set(23, -20, -27);
-			tmp.add(tire);
-			tmp.add(res);
-			res = tmp;
-			return res;
-		}
-		var car = makeCar('red');
-		scene.add(car);
-		var car2 = makeCar('blue');
-		scene.add(car2);
-		var car3 = makeCar('yellow');
-		scene.add(car3);
+		var p1, p2, ball, spectator, A, B, ballFly1, ballFly2, car, car2, car3;
 
 		function coeffCalc(t) {
 			function poly(x) {
@@ -162,7 +70,109 @@
 			return poly(t - Math.PI * Math.floor(t / Math.PI));
 		}
 
-		scene.rotation.y = Math.PI / 2 + Math.PI / 8;
+		function start() {
+			document.getElementById('music').play();
+			createScene(); // инициализиране на сцената
+			Mannequin.colors = [
+				0xecbcb4,
+				'gray',
+				'blue',
+				0xecbcb4,
+				0x0d6ea3,
+				'skyblue'
+			];
+
+			p1 = new Male(), p2 = new Female();
+			ball = new Child();
+			spectator = new Child();
+			spectator.torso.recolor('red');
+			ball.torso.recolor('red');
+			spectator.position.set(40, -11, 60);
+			spectator.rotation.y = Math.PI;
+			spectator.posture = { "version": 6, "data": [2.3, [0.5, -90, 0], [0, 0, -4.8], [0.4, -4.5, 5], [6, 0, 21.6], [38.8], [-6, -6, -20.8], [-6, 0, 17.4], [41.3], [6, 6, -25.2], [24.6, 47.6, 104.8], [119.1], [-15, -83.1, 0], [40.9, 10], [-48.6, -76.8, 70.3], [128.4], [15, 90, 0], [10, 10]] };
+			ball.position.y = 15;
+			ball.position.z = 15;
+			ball.rotation.y = Math.PI / 2;
+			p1.position.x = 50;
+			p1.position.y = -.5;
+			p2.position.x = -50;
+			p2.position.y = -.5;
+
+			A = { "version": 6, "data": [0.9, [-1.9, -63.9, -1.3], [0, 0, -2], [6.7, 14.3, 4.3], [6, -13.8, 35.8], [47.8], [-6, -6, -9.5], [-6, 0, 22.1], [53.2], [6, 6, -27.6], [2.4, 18.9, 37], [36.7], [49.5, -84.1, 70], [34.3, 100], [3.6, 4.4, 26.2], [49.5], [-18.8, 57.3, 29.4], [56.1, 10]] };
+			B = { "version": 6, "data": [-1.5, [-1.9, -63.9, -1.3], [8.8, -0.3, -2.3], [11, -28, 7.1], [6, -13.8, 23], [67.7], [-6, -6, -46.3], [-6, 0, 25.5], [67.7], [6, 6, -48.6], [40.1, -51, 70.2], [23.9], [49.5, -84.1, 70], [34.3, 100], [-5.4, -37.5, 34.9], [27.1], [-18.8, 57.3, 29.4], [56.1, 10]] };
+			//todo fix
+			ballFly1 = { "version": 6, "data": [3.5, [-70.4, -88.3, -1], [15.6, 32.7, -14.1], [27.1, -44.9, 6.4], [-54.9, 61.1, 121], [65.5], [-6, -6, -0.6], [-6, -38.2, 26.5], [70.5], [6, 6, -0.6], [26.4, -32.3, 8.9], [16.5], [84.2, -46.6, 89.9], [72.5, 97.8], [89.9, -73.2, -135], [79.6], [-89.2, 0, 89.9], [72.9, 69.8]] };
+			ballFly2 = { "version": 6, "data": [3.5, [111.4, -55.4, 179.6], [17.6, 38.8, -15.2], [17.8, 46.6, 6.6], [-54.9, 61.1, 118.3], [63.5], [-6, -6, 35.9], [-36.7, 32.2, 102.6], [121.2], [6, 6, 37.1], [-2, 71.9, 24.7], [16.5], [-32.1, 25.2, 49.4], [72.5, 97.8], [25.1, -33.6, 109.8], [79.6], [-89.2, 0, 89.9], [72.9, 69.8]] };
+
+
+
+			function makeCar(color) {
+				var shape = new THREE.Shape();
+				shape.moveTo(-5.5, 0);
+				shape.lineTo(-5.92, 0.48);
+				shape.lineTo(-5.46, 1.28);
+				shape.lineTo(-4.76, 1.54);
+				shape.lineTo(-3.74, 2.22);
+				shape.lineTo(-2.76, 2.92);
+				shape.lineTo(-1.44, 3.24);
+				shape.lineTo(-.4, 3.3);
+				shape.lineTo(.84, 3.08);
+				shape.lineTo(1.46, 2.86);
+				shape.lineTo(3.08, 1.36);
+				shape.lineTo(3.88, 1.22);
+				shape.lineTo(5, 1);
+				shape.lineTo(5.48, .6);
+				shape.lineTo(5.38, .14);
+				shape.lineTo(5, 0);
+				shape.lineTo(2.62, 0);
+				shape.lineTo(2.32, 0.53);
+				shape.lineTo(1.75, 0.53);
+				shape.lineTo(1.38, 0);
+				shape.lineTo(-2.5, 0);
+				shape.lineTo(-2.9, 0.57);
+				shape.lineTo(-3.36, .61);
+				shape.lineTo(-3.73, .4);
+				shape.lineTo(-4, 0);
+				shape.lineTo(-5, 0);
+				shape.lineTo(-5.5, 0);
+
+				var extrudeSettings = { depth: 5, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.5, bevelThickness: 0.5 };
+				var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+				var res = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color: color, shininess: 140, specular: 'white' }));
+				res.position.set(2.5, -2.2, 0);
+				res.rotation.y = -Math.PI / 2;
+				var tmp = new THREE.Group();
+				tmp.add(res);
+				res = tmp;
+				res.scale.set(8, 8, 8);
+				tmp = new THREE.Group();
+				var tire = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 4, 32), new THREE.MeshPhongMaterial({ color: 'black' }));
+				tire.position.set(23, -20, 14);
+				tire.rotation.z = Math.PI / 2;
+				tmp.add(tire);
+				tire = tire.clone();
+				tire.position.set(-23, -20, 14);
+				tmp.add(tire);
+				tire = tire.clone();
+				tire.position.set(-23, -20, -27);
+				tmp.add(tire);
+				tire = tire.clone();
+				tire.position.set(23, -20, -27);
+				tmp.add(tire);
+				tmp.add(res);
+				res = tmp;
+				return res;
+			}
+			car = makeCar('red');
+			scene.add(car);
+			car2 = makeCar('blue');
+			scene.add(car2);
+			car3 = makeCar('yellow');
+			scene.add(car3);
+
+			scene.rotation.y = Math.PI / 2 + Math.PI / 8;
+
+		}
 
 		function animate(t) {
 			// в тази функция направете движението на
