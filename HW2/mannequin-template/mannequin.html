@@ -68,11 +68,12 @@
 		var spectator = new Child();
 		spectator.torso.recolor('red');
 		ball.torso.recolor('red');
-		spectator.position.set(15, -11, 150);
+		spectator.position.set(40, -11, 60);
 		spectator.rotation.y = Math.PI;
 		spectator.posture = { "version": 6, "data": [2.3, [0.5, -90, 0], [0, 0, -4.8], [0.4, -4.5, 5], [6, 0, 21.6], [38.8], [-6, -6, -20.8], [-6, 0, 17.4], [41.3], [6, 6, -25.2], [24.6, 47.6, 104.8], [119.1], [-15, -83.1, 0], [40.9, 10], [-48.6, -76.8, 70.3], [128.4], [15, 90, 0], [10, 10]] };
 		ball.position.y = 15;
-		ball.position.z = 20;
+		ball.position.z = 15;
+		ball.rotation.y = Math.PI / 2;
 		p1.position.x = 50;
 		p1.position.y = -.5;
 		p2.position.x = -50;
@@ -86,45 +87,69 @@
 		// тук си направете човечетата и статичните елементи по позите
 		// ...
 		// ...
-		var shape = new THREE.Shape();
-		shape.moveTo(-5.5, 0);
-		shape.lineTo(-5.92, 0.48);
-		shape.lineTo(-5.46, 1.28);
-		shape.lineTo(-4.76, 1.54);
-		shape.lineTo(-3.74, 2.22);
-		shape.lineTo(-2.76, 2.92);
-		shape.lineTo(-1.44, 3.24);
-		shape.lineTo(-.4, 3.3);
-		shape.lineTo(.84, 3.08);
-		shape.lineTo(1.46, 2.86);
-		shape.lineTo(3.08, 1.36);
-		shape.lineTo(3.88, 1.22);
-		shape.lineTo(5, 1);
-		shape.lineTo(5.48, .6);
-		shape.lineTo(5.38, .14);
-		shape.lineTo(5, 0);
-		shape.lineTo(2.62, 0);
-		shape.lineTo(2.32, 0.53);
-		shape.lineTo(1.75, 0.53);
-		shape.lineTo(1.38, 0);
-		shape.lineTo(-2.5, 0);
-		shape.lineTo(-2.9, 0.57);
-		shape.lineTo(-3.36, .61);
-		shape.lineTo(-3.73, .4);
-		shape.lineTo(-4, 0);
-		shape.lineTo(-5, 0);
-		shape.lineTo(-5.5, 0);
+		function makeCar(color) {
+			var shape = new THREE.Shape();
+			shape.moveTo(-5.5, 0);
+			shape.lineTo(-5.92, 0.48);
+			shape.lineTo(-5.46, 1.28);
+			shape.lineTo(-4.76, 1.54);
+			shape.lineTo(-3.74, 2.22);
+			shape.lineTo(-2.76, 2.92);
+			shape.lineTo(-1.44, 3.24);
+			shape.lineTo(-.4, 3.3);
+			shape.lineTo(.84, 3.08);
+			shape.lineTo(1.46, 2.86);
+			shape.lineTo(3.08, 1.36);
+			shape.lineTo(3.88, 1.22);
+			shape.lineTo(5, 1);
+			shape.lineTo(5.48, .6);
+			shape.lineTo(5.38, .14);
+			shape.lineTo(5, 0);
+			shape.lineTo(2.62, 0);
+			shape.lineTo(2.32, 0.53);
+			shape.lineTo(1.75, 0.53);
+			shape.lineTo(1.38, 0);
+			shape.lineTo(-2.5, 0);
+			shape.lineTo(-2.9, 0.57);
+			shape.lineTo(-3.36, .61);
+			shape.lineTo(-3.73, .4);
+			shape.lineTo(-4, 0);
+			shape.lineTo(-5, 0);
+			shape.lineTo(-5.5, 0);
 
-		var extrudeSettings = { depth: 5, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.5, bevelThickness: 0.5 };
-		var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-		var car = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color: 'red', shininess: 140, specular: 'white' }));
-		car.position.set(2.5, -2.5, 0);
-		car.rotation.y = -Math.PI / 2;
-		var tmp = new THREE.Group();
-		tmp.add(car);
-		car = tmp;
-		car.scale.set(10, 10, 10);
-		//scene.add(car);
+			var extrudeSettings = { depth: 5, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.5, bevelThickness: 0.5 };
+			var geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+			var res = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color: color, shininess: 140, specular: 'white' }));
+			res.position.set(2.5, -2.2, 0);
+			res.rotation.y = -Math.PI / 2;
+			var tmp = new THREE.Group();
+			tmp.add(res);
+			res = tmp;
+			res.scale.set(8, 8, 8);
+			tmp = new THREE.Group();
+			var tire = new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 4, 32), new THREE.MeshPhongMaterial({ color: 'black' }));
+			tire.position.set(23, -20, 14);
+			tire.rotation.z = Math.PI / 2;
+			tmp.add(tire);
+			tire = tire.clone();
+			tire.position.set(-23, -20, 14);
+			tmp.add(tire);
+			tire = tire.clone();
+			tire.position.set(-23, -20, -27);
+			tmp.add(tire);
+			tire = tire.clone();
+			tire.position.set(23, -20, -27);
+			tmp.add(tire);
+			tmp.add(res);
+			res = tmp;
+			return res;
+		}
+		var car = makeCar('red');
+		scene.add(car);
+		var car2 = makeCar('blue');
+		scene.add(car2);
+		var car3 = makeCar('yellow');
+		scene.add(car3);
 
 		function coeffCalc(t) {
 			function poly(x) {
@@ -137,6 +162,8 @@
 			return poly(t - Math.PI * Math.floor(t / Math.PI));
 		}
 
+		scene.rotation.y = Math.PI / 2 + Math.PI / 8;
+
 		function animate(t) {
 			// в тази функция направете движението на
 			// човечетата (параметърът t е времето)
@@ -145,13 +172,15 @@
 			var k1 = Math.abs(Math.sin(t / 70) * Math.sin(t / 70) * Math.cos(4 * t / 70) + 1 / 2) * 2 / 3;
 			var k2 = Math.abs(Math.sin(Math.PI / 2 + t / 70) * Math.sin(Math.PI / 2 + (Math.PI / 2 + t) / 70) * Math.cos(Math.PI / 2 + 4 * (Math.PI / 2 + t) / 70) + 1 / 2) * 2 / 3;
 			//todo fix
-			p1.posture = Mannequin.blend(B, A, 1-coeffCalc((t-75)/125));
-			p2.posture = Mannequin.blend(A, B, 1-coeffCalc((t+100)/125));
+			p1.posture = Mannequin.blend(B, A, 1 - coeffCalc((t - 75) / 125));
+			p2.posture = Mannequin.blend(A, B, 1 - coeffCalc((t + 100) / 125));
 			ball.posture = Mannequin.blend(ballFly1, ballFly2, -sin(t) / 2 + 1 / 2);
-			ball.position.x = 55 * Math.sin(t / 60);
-			ball.position.y = 36 - 30 * Math.pow(Math.sin(t / 60), 2);
+			ball.position.x = 53 * Math.sin(t / 60) + 2;
+			ball.position.y = 33 - 30 * Math.pow(Math.sin(t / 60), 2);
 
-			car.position.z = 100 * Math.sin(t / 50);
+			car.position.z = t % 800 - 250;
+			car2.position.z = (t + 300) % 800 - 250;
+			car3.position.z = (t + 500) % 800 - 250;
 
 			scene.rotation.y = Math.PI + t / 500;
 		}
