@@ -174,6 +174,10 @@
 
 		}
 
+		function calc(x, y, k) {
+			return (1 - k) * x + k * y;
+		}
+
 		function animate(t) {
 			// в тази функция направете движението на
 			// човечетата (параметърът t е времето)
@@ -182,8 +186,125 @@
 			var k1 = Math.abs(Math.sin(t / 70) * Math.sin(t / 70) * Math.cos(4 * t / 70) + 1 / 2) * 2 / 3;
 			var k2 = Math.abs(Math.sin(Math.PI / 2 + t / 70) * Math.sin(Math.PI / 2 + (Math.PI / 2 + t) / 70) * Math.cos(Math.PI / 2 + 4 * (Math.PI / 2 + t) / 70) + 1 / 2) * 2 / 3;
 			//todo fix
-			p1.posture = Mannequin.blend(B, A, 1 - coeffCalc((t - 75) / 125));
-			p2.posture = Mannequin.blend(A, B, 1 - coeffCalc((t + 100) / 125));
+
+			p2.body.position.y = calc(-3, -5, 1 - coeffCalc((t + 100) / 125));
+
+			p2.body.bend = -0.40637343401064374;
+			p2.body.turn = -63.9;
+			p2.body.tilt = 0.8357818881860015;
+
+			p2.torso.tilt = calc(0, -8.8, 1 - coeffCalc((t + 100) / 125));
+			p2.torso.turn = calc(0, 0.05, 1 - coeffCalc((t + 100) / 125));
+			p2.torso.bend = calc(2, 2.346, 1 - coeffCalc((t + 100) / 125));
+
+			p2.head.tilt = calc(-13.05, -19.408, 1 - coeffCalc((t + 100) / 125));
+			p2.head.turn = calc(27.54, -58.04, 1 - coeffCalc((t + 100) / 125));
+			p2.head.nod = calc(-11.92, -3.77, 1 - coeffCalc((t + 100) / 125));
+
+			p2.l_leg.straddle = calc(6, 6, 1 - coeffCalc((t + 100) / 125));
+			p2.l_leg.turn = calc(-13.8, -13.8, 1 - coeffCalc((t + 100) / 125));
+			p2.l_leg.raise = calc(35.8, 23, 1 - coeffCalc((t + 100) / 125));
+
+			p2.l_knee.bend = calc(47.8, 67.7, 1 - coeffCalc((t + 100) / 125));
+
+			p2.l_ankle.tilt = calc(6.03, 8.507, 1 - coeffCalc((t + 100) / 125));
+			p2.l_ankle.turn = calc(6.90, 8.475, 1 - coeffCalc((t + 100) / 125));
+			p2.l_ankle.bend = calc(8.87, 45.67, 1 - coeffCalc((t + 100) / 125));
+
+			p2.r_leg.straddle = calc(-6, -6, 1 - coeffCalc((t + 100) / 125));
+			p2.r_leg.turn = calc(0, 0, 1 - coeffCalc((t + 100) / 125));
+			p2.r_leg.raise = calc(22.1, 25.5, 1 - coeffCalc((t + 100) / 125));
+
+			p2.r_knee.bend = calc(53.2, 67.7, 1 - coeffCalc((t + 100) / 125));
+
+			p2.r_ankle.tilt = calc(6.688, 8.873, 1 - coeffCalc((t + 100) / 125));
+			p2.r_ankle.turn = calc(8.087, 8.462, 1 - coeffCalc((t + 100) / 125));
+			p2.r_ankle.bend = calc(26.97, 47.97, 1 - coeffCalc((t + 100) / 125));
+
+			p2.l_arm.raise = calc(37.77780901425354, 36.99855573091134, 1 - coeffCalc((t + 100) / 125));
+			p2.l_arm.straddle = calc(2.871765947011148, 29.039812089115575, 1 - coeffCalc((t + 100) / 125));
+			p2.l_arm.turn = calc(13.86210051139402, -59.19640006384891, 1 - coeffCalc((t + 100) / 125));
+
+			p2.l_elbow.bend = calc(36.7, 23.9, 1 - coeffCalc((t + 100) / 125));
+
+			p2.l_wrist.tilt = calc(-20.650344929476155, -20.650344929476155, 1 - coeffCalc((t + 100) / 125));
+			p2.l_wrist.turn = calc(85.91820382132427, 85.91820382132427, 1 - coeffCalc((t + 100) / 125));
+			p2.l_wrist.bend = calc(4.789469698406327, 4.789469698406327, 1 - coeffCalc((t + 100) / 125));
+
+			p2.l_fingers.turn = calc(34.3, 34.3, 1 - coeffCalc((t + 100) / 125));
+			p2.l_fingers.bend = calc(100, 100, 1 - coeffCalc((t + 100) / 125));
+
+			p2.r_arm.straddle = calc(-4, 5.44, 1 - coeffCalc((t + 100) / 125));
+			p2.r_arm.turn = calc(-2.35, 29.29, 1 - coeffCalc((t + 100) / 125));
+			p2.r_arm.raise = calc(26.47, 38.19, 1 - coeffCalc((t + 100) / 125));
+
+			p2.r_elbow.bend = calc(49.5, 27.1, 1 - coeffCalc((t + 100) / 125));
+
+			p2.r_wrist.tilt = calc(13.414, 10.301613881328315, 1 - coeffCalc((t + 100) / 125));
+			p2.r_wrist.turn = calc(59.03, 59.032103526880746, 1 - coeffCalc((t + 100) / 125));
+			p2.r_wrist.bend = calc(10.30, 13.414388104774785, 1 - coeffCalc((t + 100) / 125));
+
+			p2.r_fingers.posture = [56.1, 10];
+
+			p1.body.position.y = calc(-3, -5, 1 - coeffCalc((t - 75) / 125));
+
+			p1.body.bend = -0.40637343401064374;
+			p1.body.turn = -63.9;
+			p1.body.tilt = 0.8357818881860015;
+
+			p1.torso.tilt = calc(0, -8.8, coeffCalc((t - 75) / 125));
+			p1.torso.turn = calc(0, 0.05, coeffCalc((t - 75) / 125));
+			p1.torso.bend = calc(2, 2.346, coeffCalc((t - 75) / 125));
+
+			p1.head.tilt = calc(-13.05, -19.408, coeffCalc((t - 75) / 125));
+			p1.head.turn = calc(27.54, -58.04, coeffCalc((t - 75) / 125));
+			p1.head.nod = calc(-11.92, -3.77, coeffCalc((t - 75) / 125));
+
+			p1.l_leg.straddle = calc(6, 6, coeffCalc((t - 75) / 125));
+			p1.l_leg.turn = calc(-13.8, -13.8, coeffCalc((t - 75) / 125));
+			p1.l_leg.raise = calc(35.8, 23, coeffCalc((t - 75) / 125));
+
+			p1.l_knee.bend = calc(47.8, 67.7, coeffCalc((t - 75) / 125));
+
+			p1.l_ankle.tilt = calc(6.03, 8.507, coeffCalc((t - 75) / 125));
+			p1.l_ankle.turn = calc(6.90, 8.475, coeffCalc((t - 75) / 125));
+			p1.l_ankle.bend = calc(8.87, 45.67, coeffCalc((t - 75) / 125));
+
+			p1.r_leg.straddle = calc(-6, -6, coeffCalc((t - 75) / 125));
+			p1.r_leg.turn = calc(0, 0, coeffCalc((t - 75) / 125));
+			p1.r_leg.raise = calc(22.1, 25.5, coeffCalc((t - 75) / 125));
+
+			p1.r_knee.bend = calc(53.2, 67.7, coeffCalc((t - 75) / 125));
+
+			p1.r_ankle.tilt = calc(6.688, 8.873, 1 - coeffCalc((t - 75) / 125));
+			p1.r_ankle.turn = calc(8.087, 8.462, coeffCalc((t - 75) / 125));
+			p1.r_ankle.bend = calc(26.97, 47.97, coeffCalc((t - 75) / 125));
+
+			p1.l_arm.raise = calc(37.77780901425354, 36.99855573091134, coeffCalc((t - 75) / 125));
+			p1.l_arm.straddle = calc(2.871765947011148, 29.039812089115575, coeffCalc((t - 75) / 125));
+			p1.l_arm.turn = calc(13.86210051139402, -59.19640006384891, coeffCalc((t - 75) / 125));
+
+			p1.l_elbow.bend = calc(36.7, 23.9, coeffCalc((t - 75) / 125));
+
+			p1.l_wrist.tilt = calc(-20.650344929476155, -20.650344929476155, coeffCalc((t - 75) / 125));
+			p1.l_wrist.turn = calc(85.91820382132427, 85.91820382132427, coeffCalc((t - 75) / 125));
+			p1.l_wrist.bend = calc(4.789469698406327, 4.789469698406327, coeffCalc((t - 75) / 125));
+
+			p1.l_fingers.turn = calc(34.3, 34.3, coeffCalc((t - 75) / 125));
+			p1.l_fingers.bend = calc(100, 100, coeffCalc((t - 75) / 125));
+
+			p1.r_arm.straddle = calc(-4, 5.44, coeffCalc((t - 75) / 125));
+			p1.r_arm.turn = calc(-2.35, 29.29, coeffCalc((t - 75) / 125));
+			p1.r_arm.raise = calc(26.47, 38.19, coeffCalc((t - 75) / 125));
+
+			p1.r_elbow.bend = calc(49.5, 27.1, coeffCalc((t - 75) / 125));
+
+			p1.r_wrist.tilt = calc(13.414, 10.301613881328315, coeffCalc((t - 75) / 125));
+			p1.r_wrist.turn = calc(59.03, 59.032103526880746, coeffCalc((t - 75) / 125));
+			p1.r_wrist.bend = calc(10.30, 13.414388104774785, coeffCalc((t - 75) / 125));
+
+			p1.r_fingers.posture = [56.1, 10];
+
 			ball.posture = Mannequin.blend(ballFly1, ballFly2, -sin(t) / 2 + 1 / 2);
 			ball.position.x = 53 * Math.sin(t / 60) + 2;
 			ball.position.y = 33 - 30 * Math.pow(Math.sin(t / 60), 2);

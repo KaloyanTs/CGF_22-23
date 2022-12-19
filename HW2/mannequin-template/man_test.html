@@ -58,11 +58,73 @@
 
         scene.rotation.y = Math.PI / 2 + Math.PI / 8;
 
+        function calc(x, y, k) {
+            return (1 - k) * x + k * y;
+        }
+
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         function animate(t) {
 
-            p1.posture = A;
-            p2.posture = B;
+            p1.body.position.y = calc(-3, -5, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.body.bend = -0.40637343401064374;
+            p1.body.turn = -63.9;
+            p1.body.tilt = 0.8357818881860015;
+
+            p1.torso.tilt = calc(0, -8.8, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.torso.turn = calc(0, 0.05, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.torso.bend = calc(2, 2.346, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.head.tilt = calc(-13.05, -19.408, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.head.turn = calc(27.54, -58.04, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.head.nod = calc(-11.92, -3.77, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.l_leg.straddle = calc(6, 6, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.l_leg.turn = calc(-13.8, -13.8, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.l_leg.raise = calc(35.8, 23, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.l_knee.bend = calc(47.8, 67.7, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.l_ankle.tilt = calc(6.03, 8.507, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.l_ankle.turn = calc(6.90, 8.475, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.l_ankle.bend = calc(8.87, 45.67, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.r_leg.straddle = calc(-6, -6, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.r_leg.turn = calc(0, 0, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.r_leg.raise = calc(22.1, 25.5, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.r_knee.bend = calc(53.2, 67.7, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.r_ankle.tilt = calc(6.688, 8.873, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.r_ankle.turn = calc(8.087, 8.462, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.r_ankle.bend = calc(26.97, 47.97, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.l_arm.raise = calc(37.77780901425354, 36.99855573091134, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.l_arm.straddle = calc(2.871765947011148, 29.039812089115575, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.l_arm.turn = calc(13.86210051139402, -59.19640006384891, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.l_elbow.bend = calc(36.7, 23.9, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.l_wrist.tilt = calc(-20.650344929476155, -20.650344929476155, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.l_wrist.turn = calc(85.91820382132427, 85.91820382132427, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.l_wrist.bend = calc(4.789469698406327, 4.789469698406327, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.l_fingers.turn = calc(34.3, 34.3, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.l_fingers.bend = calc(100, 100, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.r_arm.straddle = calc(-4, 5.44, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.r_arm.turn = calc(-2.35, 29.29, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.r_arm.raise = calc(26.47, 38.19, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.r_elbow.bend = calc(49.5, 27.1, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.r_wrist.tilt = calc(13.414, 10.301613881328315, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.r_wrist.turn = calc(59.03, 59.032103526880746, Math.sin(t / 50) / 2 + 1 / 2);
+            p1.r_wrist.bend = calc(10.30, 13.414388104774785, Math.sin(t / 50) / 2 + 1 / 2);
+
+            p1.r_fingers.posture = [56.1, 10];
+
+            p2.posture = Mannequin.blend(A, B, Math.sin(t / 50) / 2 + 1 / 2);
 
             scene.rotation.y = Math.PI / 3;
         }
