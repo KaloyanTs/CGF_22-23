@@ -101,8 +101,8 @@
 			A = { "version": 6, "data": [0.9, [-1.9, -63.9, -1.3], [0, 0, -2], [6.7, 14.3, 4.3], [6, -13.8, 35.8], [47.8], [-6, -6, -9.5], [-6, 0, 22.1], [53.2], [6, 6, -27.6], [2.4, 18.9, 37], [36.7], [49.5, -84.1, 70], [34.3, 100], [3.6, 4.4, 26.2], [49.5], [-18.8, 57.3, 29.4], [56.1, 10]] };
 			B = { "version": 6, "data": [-1.5, [-1.9, -63.9, -1.3], [8.8, -0.3, -2.3], [11, -28, 7.1], [6, -13.8, 23], [67.7], [-6, -6, -46.3], [-6, 0, 25.5], [67.7], [6, 6, -48.6], [40.1, -51, 70.2], [23.9], [49.5, -84.1, 70], [34.3, 100], [-5.4, -37.5, 34.9], [27.1], [-18.8, 57.3, 29.4], [56.1, 10]] };
 			//todo fix
-			ballFly1 = { "version": 6, "data": [3.5, [-70.4, -88.3, -1], [15.6, 32.7, -14.1], [27.1, -44.9, 6.4], [-54.9, 61.1, 121], [65.5], [-6, -6, -0.6], [-6, -38.2, 26.5], [70.5], [6, 6, -0.6], [26.4, -32.3, 8.9], [16.5], [84.2, -46.6, 89.9], [72.5, 97.8], [89.9, -73.2, -135], [79.6], [-89.2, 0, 89.9], [72.9, 69.8]] };
-			ballFly2 = { "version": 6, "data": [3.5, [111.4, -55.4, 179.6], [17.6, 38.8, -15.2], [17.8, 46.6, 6.6], [-54.9, 61.1, 118.3], [63.5], [-6, -6, 35.9], [-36.7, 32.2, 102.6], [121.2], [6, 6, 37.1], [-2, 71.9, 24.7], [16.5], [-32.1, 25.2, 49.4], [72.5, 97.8], [25.1, -33.6, 109.8], [79.6], [-89.2, 0, 89.9], [72.9, 69.8]] };
+			ballFly1 = { "version": 6, "data": [11.1, [-70.4, -88.3, -1], [18.9, 2, -18.2], [-23.4, 19.6, 30], [-38.6, 35.7, 61.9], [71.4], [-6, -6, 44.2], [-4.2, -7.8, 56.8], [43.5], [6, 6, -0.6], [26.4, -32.3, 42], [56.3], [-89.8, -89.3, -84.1], [17.3, 100], [-35.9, -21.7, -16.4], [67.4], [90, 84.8, -89.1], [-10, 53.3]] };
+			ballFly2 = { "version": 6, "data": [7.3, [-70.4, -88.3, -1], [6.2, -7.8, -29.9], [24.9, -31.4, 5.2], [-54.9, 61.1, 133], [30.4], [-6, -6, -0.6], [16.8, 17.7, 69.4], [70.5], [6, 6, -0.6], [14.4, 43.7, 26.2], [87.1], [84.2, -46.6, 89.9], [72.5, 97.8], [-28, 5.7, 17.6], [76.6], [90, 82.9, -89.2], [18.4, 53.3]] };
 
 
 
@@ -187,7 +187,7 @@
 			var k2 = Math.abs(Math.sin(Math.PI / 2 + t / 70) * Math.sin(Math.PI / 2 + (Math.PI / 2 + t) / 70) * Math.cos(Math.PI / 2 + 4 * (Math.PI / 2 + t) / 70) + 1 / 2) * 2 / 3;
 			//todo fix
 
-			p2.body.position.y = calc(-3, -5, 1 - coeffCalc((t + 100) / 125));
+			p2.body.position.y = calc(0, 0, 1 - coeffCalc((t + 100) / 125));
 
 			p2.body.bend = -0.40637343401064374;
 			p2.body.turn = -63.9;
@@ -246,7 +246,7 @@
 
 			p2.r_fingers.posture = [56.1, 10];
 
-			p1.body.position.y = calc(-3, -5, 1 - coeffCalc((t - 75) / 125));
+			p1.body.position.y = calc(0, 0, 1 - coeffCalc((t - 75) / 125));
 
 			p1.body.bend = -0.40637343401064374;
 			p1.body.turn = -63.9;
@@ -305,9 +305,63 @@
 
 			p1.r_fingers.posture = [56.1, 10];
 
-			ball.posture = Mannequin.blend(ballFly1, ballFly2, -sin(t) / 2 + 1 / 2);
+			ball.body.bend = -69.391;
+
+			ball.torso.tilt = calc(-19.72, -7.13, -sin(t) / 2 + 1 / 2);
+			ball.torso.turn = calc(7.95, -3.66, -sin(t) / 2 + 1 / 2);
+			ball.torso.bend = calc(17.475, 30.744, -sin(t) / 2 + 1 / 2);
+
+			ball.head.tilt = calc(46.95, -42.53, -sin(t) / 2 + 1 / 2);
+			ball.head.turn = calc(56.56, 66.62, -sin(t) / 2 + 1 / 2);
+			ball.head.nod = calc(-43.51, 16.79, -sin(t) / 2 + 1 / 2);
+
+			ball.l_leg.straddle = calc(-36.31, -71.57, -sin(t) / 2 + 1 / 2);
+			ball.l_leg.turn = calc(50.38, 6.06, -sin(t) / 2 + 1 / 2);
+			ball.l_leg.raise = calc(36.87, 81.75, -sin(t) / 2 + 1 / 2);
+
+			ball.l_knee.bend = calc(71.374, 30.4, -sin(t) / 2 + 1 / 2);
+
+			ball.l_ankle.tilt = calc(8.38, 5.967, -sin(t) / 2 + 1 / 2);
+			ball.l_ankle.turn = calc(0.09, 8.475, -sin(t) / 2 + 1 / 2);
+			ball.l_ankle.bend = calc(-44.83, -0.029, -sin(t) / 2 + 1 / 2);
+
+			ball.r_leg.straddle = calc(7.6575, -47.24, -sin(t) / 2 + 1 / 2);
+			ball.r_leg.turn = calc(0.7563, 10.446, -sin(t) / 2 + 1 / 2);
+			ball.r_leg.raise = calc(57.39, 74.644, -sin(t) / 2 + 1 / 2);
+
+			ball.r_knee.bend = calc(43.47, 70.5, -sin(t) / 2 + 1 / 2);
+
+			ball.r_ankle.tilt = calc(5.967, 5.9670, 1 - -sin(t) / 2 + 1 / 2);
+			ball.r_ankle.turn = calc(6.06, 6.0623, -sin(t) / 2 + 1 / 2);
+			ball.r_ankle.bend = calc(-0.029, -0.029, -sin(t) / 2 + 1 / 2);
+
+			ball.l_arm.raise = calc(27.16, 36.258, -sin(t) / 2 + 1 / 2);
+			ball.l_arm.straddle = calc(24.505, 12.77, -sin(t) / 2 + 1 / 2);
+			ball.l_arm.turn = calc(-40.78, 35.0166, -sin(t) / 2 + 1 / 2);
+
+			ball.l_elbow.bend = calc(56.26, 87.1, -sin(t) / 2 + 1 / 2);
+
+			ball.l_wrist.tilt = calc(-5.7277, -7.8584, -sin(t) / 2 + 1 / 2);
+			ball.l_wrist.turn = calc(89.99, 86.0082, -sin(t) / 2 + 1 / 2);
+			ball.l_wrist.bend = calc(-0.66, 43.393, -sin(t) / 2 + 1 / 2);
+
+			ball.l_fingers.turn = calc(34.3, 34.3, -sin(t) / 2 + 1 / 2);
+			ball.l_fingers.bend = calc(17.32, 72.5, -sin(t) / 2 + 1 / 2);
+
+			ball.r_arm.straddle = calc(33.034, 28.6308, -sin(t) / 2 + 1 / 2);
+			ball.r_arm.turn = calc(31.02, 72.5, -sin(t) / 2 + 1 / 2);
+			ball.r_arm.raise = calc(-1.41, 14.577, -sin(t) / 2 + 1 / 2);
+
+			ball.r_elbow.bend = calc(67.36, 76.6, -sin(t) / 2 + 1 / 2);
+
+			ball.r_wrist.tilt = calc(0.844, 0.800, -sin(t) / 2 + 1 / 2);
+			ball.r_wrist.turn = calc(89.99, 89.9997, -sin(t) / 2 + 1 / 2);
+			ball.r_wrist.bend = calc(-5.206, -7.100, -sin(t) / 2 + 1 / 2);
+
+			ball.r_fingers.bend = calc(-9.956, 18.4, -sin(t) / 2 + 1 / 2);
+
 			ball.position.x = 53 * Math.sin(t / 60) + 2;
-			ball.position.y = 33 - 30 * Math.pow(Math.sin(t / 60), 2);
+			ball.position.y = 31 - 30 * Math.pow(Math.sin(t / 60), 2);
 
 			car.position.z = t % 800 - 250;
 			car2.position.z = (t + 300) % 800 - 250;
